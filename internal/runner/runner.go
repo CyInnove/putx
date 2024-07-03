@@ -8,12 +8,12 @@ import (
 	"os"
 	"sync"
 
-	"github.com/CyInnove/putx/config"
+	"github.com/CyInnove/putx/pkg/utils"
 )
 
 // Run starts the PUT test for each domain in the file.
-func Run(filePath string, outputFile string) {
-	file, err := os.Open(filePath)
+func Run(options *Options) {
+	file, err := os.Open(options.FilePath)
 	if err != nil {
 		fmt.Printf("Failed to open file: %v\n", err)
 		os.Exit(1)
@@ -23,8 +23,8 @@ func Run(filePath string, outputFile string) {
 	var wg sync.WaitGroup
 	var output *os.File
 
-	if outputFile != "" {
-		output, err = os.Create(outputFile)
+	if options.OutputFile != "" {
+		output, err = os.Create(options.OutputFile)
 		if err != nil {
 			fmt.Printf("Failed to create output file: %v\n", err)
 			os.Exit(1)
@@ -57,7 +57,7 @@ func putTest(domain string, output *os.File, wg *sync.WaitGroup) {
 		return
 	}
 
-	client := config.GetHTTPClient()
+	client := utils.GetHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Printf("Request failed for %s\n", domain)

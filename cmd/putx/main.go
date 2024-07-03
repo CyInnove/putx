@@ -5,27 +5,26 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/CyInnove/putx/config"
 	"github.com/CyInnove/putx/internal/runner"
 	"github.com/CyInnove/putx/pkg/utils"
 )
 
 func main() {
-	// Define command-line flags
-	outputFile := flag.String("o", "", "Output file")
-	inputFile := flag.String("l", "", "File containing base URLs")
-	flag.Parse()
+	// Get flags from config package
+	options := config.GetFlags()
 
 	// Validate flags
-	if *inputFile == "" {
+	if options.FilePath == "" {
 		fmt.Println("Error: -l flag is required")
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	if !utils.FileExists(*inputFile) {
-		fmt.Printf("Error: File %s does not exist\n", *inputFile)
+	if !utils.FileExists(options.FilePath) {
+		fmt.Printf("Error: File %s does not exist\n", options.FilePath)
 		os.Exit(1)
 	}
 
-	runner.Run(*inputFile, *outputFile)
+	runner.Run(options)
 }

@@ -1,20 +1,16 @@
 package config
 
 import (
-	"crypto/tls"
-	"net/http"
+	"flag"
+
+	"github.com/CyInnove/putx/internal/runner"
 )
 
-// GetHTTPClient returns an HTTP client with custom settings.
-func GetHTTPClient() *http.Client {
-	// Create an HTTP client with TLS settings to skip certificate verification
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
-	client := &http.Client{
-		Transport: tr,
-	}
-
-	return client
+// GetFlags defines and parses the command-line flags.
+func GetFlags() *runner.Options {
+	options := &runner.Options{}
+	flag.StringVar(&options.FilePath, "l", "", "File containing base URLs")
+	flag.StringVar(&options.OutputFile, "o", "", "Output file")
+	flag.Parse()
+	return options
 }
